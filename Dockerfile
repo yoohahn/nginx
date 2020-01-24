@@ -146,8 +146,11 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log \
 	&& apk add --no-cache curl
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+COPY ./configs/nginx.conf /etc/nginx/nginx.conf
+COPY ./configs/default.conf /etc/nginx/conf.d/default.conf
+COPY ./configs/shared /etc/nginx/conf.shared
+COPY ./html/index.html /usr/share/nginx/www/index.html
+COPY ./html/_error.html /usr/share/nginx/www/_error.html
 
 EXPOSE 80 443
 
