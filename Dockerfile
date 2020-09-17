@@ -1,6 +1,6 @@
 FROM alpine:3.12
 
-ARG NGINX_VERSION=1.19.0
+ARG NGINX_VERSION=1.19.2
 ARG HEADERS_MORE_VERSION=0.33
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
@@ -142,11 +142,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log \
 	&& apk add --no-cache curl
 
-COPY ./configs/nginx.conf /etc/nginx/nginx.conf
-COPY ./configs/default.conf /etc/nginx/conf.d/default.conf
-COPY ./configs/shared /etc/nginx/conf.shared
+COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./html/index.html /usr/share/nginx/www/index.html
-COPY ./html/_error.html /usr/share/nginx/www/_error.html
 
 EXPOSE 80 443
 
