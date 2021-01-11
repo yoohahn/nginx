@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - "*"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Enable ipv6 for docker
+        run: |
+          echo '{"ipv6":true,"fixed-cidr-v6":"2001:db8:1::/64"}' | sudo tee /etc/docker/daemon.json
+          sudo service docker restart
+
+      - name: Build docker image
+        run: docker build -t nginx .
+
+      - name: Run 'runTests.sh'
+        if: success() && github.event_name == 'push'
+        run: sh runTests.sh
