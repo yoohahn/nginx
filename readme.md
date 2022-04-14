@@ -10,4 +10,9 @@ An nginx image with Brotli and Headers More built into it. Based on [fholzer/doc
 
 # Build
 
-`docker build -t yoohahn/nginx .`
+```bash
+$ docker buildx create --name nginx --platform linux/amd64,linux/arm64
+$ docker buildx use nginx
+$ docker buildx build --push --platform linux/amd64,linux/arm64 --file Dockerfile --tag yoohahn/nginx:latest .
+$ docker buildx build --push --platform linux/amd64,linux/arm64 --file Dockerfile --tag yoohahn/nginx:VERSION .
+```
