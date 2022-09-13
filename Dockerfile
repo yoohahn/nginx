@@ -1,10 +1,9 @@
 FROM alpine:3
 
-ARG NGINX_VERSION=1.21.6
-ARG HEADERS_MORE_VERSION=0.33
+ARG NGINX_VERSION=1.23.1
+ARG HEADERS_MORE_VERSION=0.34
 
-RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
-	&& CONFIG="\
+RUN CONFIG="\
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--modules-path=/usr/lib/nginx/modules \
@@ -63,7 +62,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	zlib-dev \
 	linux-headers \
 	curl \
-	gnupg1 \
 	libxslt-dev \
 	gd-dev \
 	geoip-dev \
@@ -81,12 +79,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	## CLONE HEADER MORE
 	&& git clone -o v${HEADERS_MORE_VERSION} --depth 1 https://github.com/openresty/headers-more-nginx-module.git headers-more \
 	&& curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
-	&& curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc  -o nginx.tar.gz.asc \
-	&& sha512sum nginx.tar.gz nginx.tar.gz.asc \
-	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver keyserver.ubuntu.com --recv-keys "$GPG_KEYS" \
-	&& gpg --batch --verify nginx.tar.gz.asc nginx.tar.gz \
-	&& rm -rf "$GNUPGHOME" nginx.tar.gz.asc \
 	&& mkdir -p /usr/src \
 	&& tar -zxC /usr/src -f nginx.tar.gz \
 	&& rm nginx.tar.gz \
